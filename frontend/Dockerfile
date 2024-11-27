@@ -4,14 +4,17 @@ FROM node:18
 # Définir le dossier de travail
 WORKDIR /app
 
-# Copier les fichiers nécessaires
+# Copier uniquement les fichiers nécessaires pour installer les dépendances
 COPY package*.json ./
 
 # Installer les dépendances
 RUN npm install
 
-# Copier tout le contenu dans l'image
+# Copier le reste des fichiers
 COPY . .
 
-# Lancer le serveur de développement
+# Exposer le port 3000 pour React
+EXPOSE 3000
+
+# Démarrer le serveur de développement React
 CMD ["npm", "start"]

@@ -8,12 +8,12 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    depends_on:
-      - backend
+      - ./frontend:/app    # Monte le code source local dans le conteneur
+      - /app/node_modules  # Évite les conflits de dépendances
     environment:
-      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true  # Force le polling pour détecter les changements
+
+
 
   backend:
     build:
