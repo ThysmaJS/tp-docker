@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
-function App() {
+const FillDatabaseButton = () => {
+  const handleFillDatabase = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/fill-database", {
+        method: "POST",
+      });
+      if (response.ok) {
+        alert("Base de données remplie avec succès !");
+      } else {
+        alert("Erreur lors du remplissage de la base de données");
+      }
+    } catch (error) {
+      console.error("Erreur :", error);
+      alert("Une erreur est survenue");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and sassssse to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <button onClick={handleFillDatabase}>
+      Remplir la base de données
+    </button>
   );
-}
+};
 
-export default App;
+export default FillDatabaseButton;
