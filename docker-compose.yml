@@ -8,14 +8,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app    # Monte le code source local dans le conteneur
-      - /app/node_modules  # Évite les conflits de dépendances
+      - ./frontend:/app
+      - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Force le polling pour détecter les changements
-
-
+      - CHOKIDAR_USEPOLLING=true
 
   backend:
+    restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -42,6 +41,11 @@ services:
       MYSQL_DATABASE: mydb
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -49,6 +53,7 @@ services:
       - "8080:80"
     environment:
       PMA_HOST: db
+      PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: root
 
 volumes:
