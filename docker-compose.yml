@@ -14,7 +14,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
 
   backend:
-    restart: always
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -53,7 +52,6 @@ services:
       - "8080:80"
     environment:
       PMA_HOST: db
-      PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: root
 
 volumes:

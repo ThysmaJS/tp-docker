@@ -1,23 +1,29 @@
+# Use an official Node.js LTS image
 FROM node:18
 
-# Définir le répertoire de travail
+# Set the working directory
 WORKDIR /app
 
-# Copier les fichiers de l'application
+# Copy only package.json and package-lock.json for dependency installation
 COPY package.json package-lock.json ./
-RUN npm install
 
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application source code
 COPY . .
 
-# Installer Netcat (version OpenBSD)
-RUN apt-get update && apt-get install -y netcat-openbsd
+# Install OpenBSD Netcat and clean up to reduce image size
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends netcat-openbsd && \
+    rm -rf /var/lib/apt/lists/*
 
-# Ajouter le script wait-for-it
+# Copy the wait-for-it script for MySQL readiness check
 COPY wait-for-it.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 
-# Exposer le port 5000
+# Expose the backend application port
 EXPOSE 5000
 
-# Lancer l'application après avoir attendu MySQL
+# Run the app with wait-for-it to ensure DB readiness
 CMD ["wait-for-it.sh", "db", "3306", "--", "npm", "start"]

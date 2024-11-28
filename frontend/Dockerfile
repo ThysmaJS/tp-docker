@@ -1,20 +1,20 @@
-# Utiliser une image Node.js
+# Use an official Node.js LTS image
 FROM node:18
 
-# Définir le dossier de travail
+# Set the working directory
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires pour installer les dépendances
-COPY package*.json ./
+# Copy only package.json and package-lock.json to leverage caching for dependencies
+COPY package.json package-lock.json ./
 
-# Installer les dépendances
-RUN npm install
+# Install dependencies
+RUN npm ci
 
-# Copier le reste des fichiers
+# Copy application source code
 COPY . .
 
-# Exposer le port 3000 pour React
+# Expose the React development server port
 EXPOSE 3000
 
-# Démarrer le serveur de développement React
+# Run the React development server
 CMD ["npm", "start"]
