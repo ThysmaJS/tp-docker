@@ -66,5 +66,17 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: root
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000" # Port pour l'agent Portainer (optionnel)
+      - "9443:9443" # Port pour l'interface utilisateur Portainer (HTTPS)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Accès au démon Docker
+      - portainer_data:/data # Stockage des données de Portainer
+
 volumes:
   db_data:
+  portainer_data:
