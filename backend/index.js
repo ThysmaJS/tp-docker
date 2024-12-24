@@ -1,6 +1,8 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const fs = require("fs"); // Pour manipuler les fichiers
+
 const app = express();
 
 // Middleware
@@ -10,11 +12,25 @@ app.use(cors()); // Autoriser toutes les origines par défaut
 // Configuration de la connexion à la base de données
 const db = mysql.createPool({
     connectionLimit: 10, // Limite de connexions simultanées
-    host: "db",
-    user: "root",
-    password: "root",
-    database: "mydb",
+    host: process.env.DB_HOST || "db",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "root",
+    database: process.env.DB_NAME || "mydb",
 });
+
+// Générer le fichier settings.json au démarrage
+const settings = {
+    backendUrl: process.env.BACKEND_URL || "http://localhost:5000",
+    frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
+    environment: process.env.NODE_ENV || "development",
+};
+const settingsPath = "./public/settings.json";
+fs.mkdirSync("./public", { recursive: true }); // Assure que le dossier existe
+fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+console.log(`settings.json generated at ${settingsPath}`);
+
+// Servir le fichier settings.json
+app.use("/settings.json", express.static(settingsPath));
 
 // Test de connexion à la base de données
 db.getConnection((err, connection) => {
@@ -82,5 +98,8 @@ app.get("/contributions", (req, res) => {
 });
 
 // Lancer le serveur
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Access settings.json at ${settings.backendUrl}/settings.json`);
+});
