@@ -71,12 +71,24 @@ services:
     container_name: portainer
     restart: always
     ports:
-      - "8000:8000" # Port pour l'agent Portainer (optionnel)
-      - "9443:9443" # Port pour l'interface utilisateur Portainer (HTTPS)
+      - "8000:8000"
+      - "9443:9443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Accès au démon Docker
-      - portainer_data:/data # Stockage des données de Portainer
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "3001:3001" # Interface utilisateur Uptime Kuma
+    volumes:
+      - uptime_kuma_data:/app/data
+    environment:
+      - TZ=Europe/Paris
 
 volumes:
   db_data:
   portainer_data:
+  uptime_kuma_data:
