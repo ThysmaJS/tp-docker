@@ -85,6 +85,8 @@ docker-compose up --build
 - **phpMyAdmin** : [http://localhost:8080](http://localhost:8080)
   - **Utilisateur** : `root`
   - **Mot de passe** : `root`
+- **Portainer** : [https://localhost:9443](https://localhost:9443)
+- **uptimeKuma** : [http://localhost:3001](http://localhost:3001)
 
 ---
 
@@ -105,6 +107,8 @@ docker-compose down
   - Backend : **5000**
   - MySQL : **3306**
   - phpMyAdmin : **8080**
+  - Portainer : **9443**
+  - uptimeKuma : **3001**
 - Assurez-vous que ces ports ne sont pas utilisés par d'autres applications.
 
 ---
